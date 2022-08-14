@@ -190,7 +190,7 @@ func main() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					rows, err := db.Query("SELECT id, name, email FROM authorss")
 					checkErr(err)
-					var authors []*Author
+					var authorss []*Author
 
 					for rows.Next() {
 						author := &Author{}
