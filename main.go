@@ -14,8 +14,7 @@ const (
 	DB_HOST     = "ec2-44-205-112-253.compute-1.amazonaws.com"
 	DB_PORT     = "5432"
 	DB_USER     = "cducbdmcfmvbai"
-	DB_PASSWORD = "
-eb7f377b251973723caf4075b463c928f93a5d61296832a4ed7f69cdba27fc02"
+	DB_PASSWORD = "eb7f377b251973723caf4075b463c928f93a5d61296832a4ed7f69cdba27fc02"
 	DB_NAME     = "dutvg8v4vddc4"
 )
 
