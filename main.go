@@ -11,11 +11,12 @@ import (
 )
 
 const (
-	DB_HOST     = "localhost"
+	DB_HOST     = "ec2-44-205-112-253.compute-1.amazonaws.com"
 	DB_PORT     = "5432"
-	DB_USER     = "graphql"
-	DB_PASSWORD = ""
-	DB_NAME     = "graphql"
+	DB_USER     = "cducbdmcfmvbai"
+	DB_PASSWORD = "
+eb7f377b251973723caf4075b463c928f93a5d61296832a4ed7f69cdba27fc02"
+	DB_NAME     = "dutvg8v4vddc4"
 )
 
 type Author struct {
@@ -151,7 +152,7 @@ func main() {
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
 					if post, ok := p.Source.(*Post); ok {
 						author := &Author{}
-						err = db.QueryRow("select id, name, email from authors where id = $1", post.AuthorID).Scan(&author.ID, &author.Name, &author.Email)
+						err = db.QueryRow("select id, name, email from authorss where id = $1", post.AuthorID).Scan(&author.ID, &author.Name, &author.Email)
 						checkErr(err)
 
 						return author, nil
@@ -178,17 +179,17 @@ func main() {
 					id, _ := params.Args["id"].(int)
 
 					author := &Author{}
-					err = db.QueryRow("select id, name, email from authors where id = $1", id).Scan(&author.ID, &author.Name, &author.Email)
+					err = db.QueryRow("select id, name, email from authorss where id = $1", id).Scan(&author.ID, &author.Name, &author.Email)
 					checkErr(err)
 
 					return author, nil
 				},
 			},
-			"authors": &graphql.Field{
+			"authorss": &graphql.Field{
 				Type:        graphql.NewList(authorType),
 				Description: "List of authors.",
 				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
-					rows, err := db.Query("SELECT id, name, email FROM authors")
+					rows, err := db.Query("SELECT id, name, email FROM authorss")
 					checkErr(err)
 					var authors []*Author
 
@@ -197,10 +198,10 @@ func main() {
 
 						err = rows.Scan(&author.ID, &author.Name, &author.Email)
 						checkErr(err)
-						authors = append(authors, author)
+						authorss = append(authorss, author)
 					}
 
-					return authors, nil
+					return authorss, nil
 				},
 			},
 			"post": &graphql.Field{
@@ -264,7 +265,7 @@ func main() {
 					createdAt := time.Now()
 
 					var lastInsertId int
-					err = db.QueryRow("INSERT INTO authors(name, email, created_at) VALUES($1, $2, $3) returning id;", name, email, createdAt).Scan(&lastInsertId)
+					err = db.QueryRow("INSERT INTO authorss(name, email, created_at) VALUES($1, $2, $3) returning id;", name, email, createdAt).Scan(&lastInsertId)
 					checkErr(err)
 
 					newAuthor := &Author{
@@ -296,7 +297,7 @@ func main() {
 					name, _ := params.Args["name"].(string)
 					email, _ := params.Args["email"].(string)
 
-					stmt, err := db.Prepare("UPDATE authors SET name = $1, email = $2 WHERE id = $3")
+					stmt, err := db.Prepare("UPDATE authorss SET name = $1, email = $2 WHERE id = $3")
 					checkErr(err)
 
 					_, err2 := stmt.Exec(name, email, id)
@@ -322,7 +323,7 @@ func main() {
 				Resolve: func(params graphql.ResolveParams) (interface{}, error) {
 					id, _ := params.Args["id"].(int)
 
-					stmt, err := db.Prepare("DELETE FROM authors WHERE id = $1")
+					stmt, err := db.Prepare("DELETE FROM authorss WHERE id = $1")
 					checkErr(err)
 
 					_, err2 := stmt.Exec(id)
